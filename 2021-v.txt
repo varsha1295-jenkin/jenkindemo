@@ -1,0 +1,102 @@
+login as: jenkindemo
+jenkindemo@20.198.2.241's password:
+Last login: Fri Mar 26 15:39:57 2021 from 111.125.230.201
+
+  Welcome to CentOS-7.9-x86_64-Minimal-30GiB-VHD-20210303_202003.
+
+  * Use "sudo su -" command in order to become root.
+
+  For your convenience, this image is provided by ProComputers.com.
+  Visit https://www.procomputers.com for more information.
+
+  If you don't want to see this message anymore, please remove
+  the content of the /etc/motd text file.
+
+[jenkindemo@jenkindemo ~]$ sudo -i
+[root@jenkindemo ~]# docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+[root@jenkindemo ~]# docker ps -a
+CONTAINER ID   IMAGE             COMMAND                  CREATED        STATUS                                                                 PORTS     NAMES
+4e4d11e687c9   jenkins/jenkins   "/sbin/tini -- /usr/…"   15 hours ago   Exited                                            (143) 14 hours ago             xenodochial_shtern
+[root@jenkindemo ~]# docker rm 4e4d11e687c9
+4e4d11e687c9
+[root@jenkindemo ~]# docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+[root@jenkindemo ~]# docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+[root@jenkindemo ~]# docker run -d -p 8080:8080 -p 50000:50000 -v /home/centos:/var/jenkins_home jenkins/jenkins
+9951532191a99224dac049408874cdb700edc5e633eb8b670c164e1856bc9a02
+[root@jenkindemo ~]# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                             S
+9951532191a9   jenkins/jenkins   "/sbin/tini -- /usr/…"   2 minutes ago   Up 2 minutes   0.0.0.0:8080->8080/tcp, 0.0.0.0:50ated_proskuriakova
+[root@jenkindemo ~]# docker exec -it 9951532191a9 sh
+$ cd /var/jenkins_home
+$ ls
+com.cloudbees.hudson.plugins.folder.config.AbstractFolderConfiguration.xml
+config.xml
+copy_reference_file.log
+github-plugin-configuration.xml
+hudson.maven.MavenModuleSet.xml
+hudson.model.UpdateCenter.xml
+hudson.plugins.build_timeout.operations.BuildStepOperation.xml
+hudson.plugins.emailext.ExtendedEmailPublisher.xml
+hudson.plugins.git.GitSCM.xml
+hudson.plugins.git.GitTool.xml
+hudson.plugins.gradle.Gradle.xml
+hudson.plugins.timestamper.TimestamperConfig.xml
+hudson.tasks.Ant.xml
+hudson.tasks.Mailer.xml
+hudson.tasks.Maven.xml
+hudson.tasks.Shell.xml
+hudson.triggers.SCMTrigger.xml
+identity.key.enc
+io.jenkins.plugins.junit.storage.JunitTestResultStorageConfiguration.xml
+jenkins.fingerprints.GlobalFingerprintConfiguration.xml
+jenkins.install.InstallUtil.lastExecVersion
+jenkins.install.UpgradeWizard.state
+jenkins-jobs
+jenkins.model.ArtifactManagerConfiguration.xml
+jenkins.model.GlobalBuildDiscarderConfiguration.xml
+jenkins.model.JenkinsLocationConfiguration.xml
+jenkins.mvn.GlobalMavenConfig.xml
+jenkins.security.ResourceDomainConfiguration.xml
+jenkins.tasks.filters.EnvVarsFilterGlobalConfiguration.xml
+jenkins.telemetry.Correlator.xml
+jobs
+logs
+nodeMonitors.xml
+nodes
+org.jenkinsci.plugins.gitclient.JGitApacheTool.xml
+org.jenkinsci.plugins.gitclient.JGitTool.xml
+org.jenkinsci.plugins.github_branch_source.GitHubConfiguration.xml
+org.jenkinsci.plugins.pipeline.maven.GlobalPipelineMavenConfig.xml
+org.jenkinsci.plugins.workflow.flow.FlowExecutionList.xml
+org.jenkinsci.plugins.workflow.flow.GlobalDefaultFlowDurabilityLevel.xml
+org.jenkinsci.plugins.workflow.libs.GlobalLibraries.xml
+org.jenkins.plugins.lockableresources.LockableResourcesManager.xml
+org.jvnet.hudson.plugins.m2release.M2ReleaseBuildWrapper.xml
+plugins
+queue.xml.bak
+scriptApproval.xml
+secret.key
+secret.key.not-so-secret
+secrets
+tools
+updates
+userContent
+users
+war
+workflow-libs
+workspace
+$ cd workspace
+$ ls
+jenkindemo2  Test
+$ cd jenkindemo2
+$ cd ..
+$ ls
+jenkindemo2  Test
+$ pwd
+/var/jenkins_home/workspace
+$ ls
+jenkindemo2  mydemo27  Test
+$
