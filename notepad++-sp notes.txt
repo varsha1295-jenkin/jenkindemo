@@ -1,0 +1,953 @@
+Jenkin sinstallation - https://github.com/jenkinsci/docker/blob/master/README.md
+https://console-openshift-console.apps.ocplife-np.bajajallianz.com
+java instalation on centos
+https://www.digitalocean.com/community/tutorials/how-to-install-java-on-centos-and-fedora
+https://www.youtube.com/watch?v=gdbA3vR2eDs&t=1154s - nice explanation
+
+Docker installation
+
+
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+
+
+docker volume ls
+docker volume inspcet <>
+docker logs
+
+
+[root@ip-172-31-15-24 ~]# docker run -d -p 8080:8080 -p 50000:50000 -v /home/centos:/var/jenkins_home jenkins/jenkins
+63759fe2d3c7dce5d82c4d375e99e16f017d9050556e4302b1b58656c6220df5
+[root@ip-172-31-15-24 ~]# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                                              NAMES
+63759fe2d3c7   jenkins/jenkins   "/sbin/tini -- /usr/…"   4 seconds ago   Up 4 seconds   0.0.0.0:8080->8080/tcp, 0.0.0.0:50000->50000/tcp   nice_keller
+[root@ip-172-31-15-24 ~]# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                                              NAMES
+63759fe2d3c7   jenkins/jenkins   "/sbin/tini -- /usr/…"   9 seconds ago   Up 8 seconds   0.0.0.0:8080->8080/tcp, 0.0.0.0:50000->50000/tcp   nice_keller
+[root@ip-172-31-15-24 ~]# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                                              NAMES
+63759fe2d3c7   jenkins/jenkins   "/sbin/tini -- /usr/…"   11 seconds ago   Up 10 seconds   0.0.0.0:8080->8080/tcp, 0.0.0.0:50000->50000/tcp   nice_keller
+[root@ip-172-31-15-24 ~]#
+[root@ip-172-31-15-24 ~]#
+[root@ip-172-31-15-24 ~]# docker exec -it 63759fe2d3c7 cat /var/jenkins_home/secrets/initialAdminPassword
+857e01caac894468bf72c340e6525269
+[root@ip-172-31-15-24 ~]#
+[root@ip-172-31-15-24 ~]#
+
+error on azure VM
+
+[root@Devops /]# docker logs b760f7f47e33
+touch: cannot touch '/var/jenkins_home/copy_reference_file.log': Permission denied
+Can not write to /var/jenkins_home/copy_reference_file.log. Wrong volume permissions?
+[root@Devops /]# cd /var/
+[root@Devops var]# ls
+adm  cache  crash  db  empty  games  gopher  kerberos  lib  local  lock  log  mail  nis  opt  preserve  run  spool  tmp  yp
+[root@Devops var]#
+[root@Devops var]# cd ..
+
+Resolution- 
+
+[root@Devops home]# sudo chown -R 1000:1000 /home/centos/
+
+http://13.233.152.65:8080/
+
+https://github.com/MottiiDL/hello-world.git
+
+https://github.com/yankils/Simple-DevOps-Project.git
+
+Building first job with maven project
+
+https://github.com/par1985parab/valaxyhelloworld.git -  Maven project
+
+https://github.com/jenkins-docs/simple-java-maven-app.git - jenks from zero to hero - proprly working
+
+https://www.udemy.com/course/jenkins-from-zero-to-hero/learn/lecture/13087408#overview
+
+to run maven rpoject
+
+install plugins then first the maven in global tool version
+
+1) -B -DskipTests clean package
+
+2) test
+
+3) Deploying created jar in /var/jenkins_home/workspace/Maven/target/my-app-1.0-SNAPSHOT.jar
+
+echo "*************"
+echo "Deploying jar"
+echo "*************"
+
+java -jar /var/jenkins_home/workspace/Maven/target/my-app-1.0-SNAPSHOT.jar
+
+
+4) test graphs
+add post build action
+
+put surefirereport .xml path  -> target/surefire-reports/*.xml
+
+save that and run the job 2-3 times
+
+5) archiving artifacts
+
+add post build action in configure section
+
+add the path -> target/*.jar ...go to advance and click on option "Archive artifacts only if build is successful"
+
+6) send email notifications 
+
+for this we have to configure mail plugins in jenkins
+
+find "mailer plugin" in manage plugins installed section
+
+integrate with aws sms or company server .to configure that go to -> configure setting -> email notifications
+
+below is the userid and password generated
+
+AKIARWCOIEC6HOE4WYP4
+BDS0GNLm2wnEzmtmphI/IwA+h7132I9rzeagC2rQVpo5
+
+
+Maven
+
+sonar integration:-
+
+sonar.projectKey=Maven
+sonar.projectName=Maven
+sonar.projectVersion=1.0
+sonar.java.binaries=./target/classes
+sonar.sources=/var/jenkins_home/workspace/Maven/src
+
+
+to integrate sonar qulaty gate
+
+sonarqualitygate tokens - 29 Dec 2020
+
+f3bced7373ac5353b353e4d8f9877cb4273b3c49
+
+
+#######################SONARQUBE Implementation###################
+
+[root@ip-172-31-15-24 ~]# sysctl vm.max_map_count
+vm.max_map_count = 65530
+[root@ip-172-31-15-24 ~]# sysctl fs.file-max
+fs.file-max = 365453
+[root@ip-172-31-15-24 ~]# ulimit -n
+1024
+[root@ip-172-31-15-24 ~]# ulimit -u
+14961
+[root@ip-172-31-15-24 ~]# rpm -Uvh https://yum.postgresql.org/11/redhat/rhel-7-x                                                                             86_64/pgdg-redhat-repo-latest.noarch.rpm
+Retrieving https://yum.postgresql.org/11/redhat/rhel-7-x86_64/pgdg-redhat-repo-l                                                                             atest.noarch.rpm
+warning: /var/tmp/rpm-tmp.VVIYrP: Header V4 DSA/SHA1 Signature, key ID 442df0f8:                                                                              NOKEY
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:pgdg-redhat-repo-42.0-11         ################################# [100%]
+[root@ip-172-31-15-24 ~]# yum install postgresql10-server postgresql10-contrib -                                                                             y
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: d36uatko69830t.cloudfront.net
+ * extras: d36uatko69830t.cloudfront.net
+ * updates: d36uatko69830t.cloudfront.net
+pgdg-common                                              | 2.9 kB     00:00
+pgdg10                                                   | 3.6 kB     00:00
+pgdg11                                                   | 3.6 kB     00:00
+pgdg12                                                   | 3.6 kB     00:00
+pgdg95                                                   | 3.6 kB     00:00
+pgdg96                                                   | 3.6 kB     00:00
+(1/11): pgdg11/7/x86_64/group_gz                           |  245 B   00:00
+(2/11): pgdg10/7/x86_64/group_gz                           |  245 B   00:00
+(3/11): pgdg12/7/x86_64/group_gz                           |  245 B   00:00
+(4/11): pgdg95/7/x86_64/group_gz                           |  249 B   00:00
+(5/11): pgdg-common/7/x86_64/primary_db                    | 152 kB   00:00
+(6/11): pgdg96/7/x86_64/group_gz                           |  249 B   00:00
+(7/11): pgdg11/7/x86_64/primary_db                         | 305 kB   00:01
+(8/11): pgdg12/7/x86_64/primary_db                         | 167 kB   00:00
+(9/11): pgdg96/7/x86_64/primary_db                         | 287 kB   00:00
+(10/11): pgdg95/7/x86_64/primary_db                        | 266 kB   00:00
+(11/11): pgdg10/7/x86_64/primary_db                        | 298 kB   00:02
+Resolving Dependencies
+--> Running transaction check
+---> Package postgresql10-contrib.x86_64 0:10.15-1PGDG.rhel7 will be installed
+--> Processing Dependency: postgresql10-libs(x86-64) = 10.15-1PGDG.rhel7 for pac                                                                             kage: postgresql10-contrib-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: postgresql10(x86-64) = 10.15-1PGDG.rhel7 for package:                                                                              postgresql10-contrib-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libxslt.so.1(LIBXML2_1.0.22)(64bit) for package: post                                                                             gresql10-contrib-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libxslt.so.1(LIBXML2_1.0.18)(64bit) for package: post                                                                             gresql10-contrib-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libxslt.so.1(LIBXML2_1.0.11)(64bit) for package: post                                                                             gresql10-contrib-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libxslt.so.1()(64bit) for package: postgresql10-contr                                                                             ib-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libpq.so.5()(64bit) for package: postgresql10-contrib                                                                             -10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libperl.so()(64bit) for package: postgresql10-contrib                                                                             -10.15-1PGDG.rhel7.x86_64
+---> Package postgresql10-server.x86_64 0:10.15-1PGDG.rhel7 will be installed
+--> Processing Dependency: libicuuc.so.50()(64bit) for package: postgresql10-ser                                                                             ver-10.15-1PGDG.rhel7.x86_64
+--> Processing Dependency: libicui18n.so.50()(64bit) for package: postgresql10-s                                                                             erver-10.15-1PGDG.rhel7.x86_64
+--> Running transaction check
+---> Package libicu.x86_64 0:50.2-4.el7_7 will be installed
+---> Package libxslt.x86_64 0:1.1.28-6.el7 will be installed
+---> Package perl-libs.x86_64 4:5.16.3-297.el7 will be installed
+--> Processing Dependency: perl(:MODULE_COMPAT_5.16.3) for package: 4:perl-libs-                                                                             5.16.3-297.el7.x86_64
+---> Package postgresql10.x86_64 0:10.15-1PGDG.rhel7 will be installed
+---> Package postgresql10-libs.x86_64 0:10.15-1PGDG.rhel7 will be installed
+--> Running transaction check
+---> Package perl.x86_64 4:5.16.3-297.el7 will be installed
+--> Processing Dependency: perl(Socket) >= 1.3 for package: 4:perl-5.16.3-297.el                                                                             7.x86_64
+--> Processing Dependency: perl(Scalar::Util) >= 1.10 for package: 4:perl-5.16.3                                                                             -297.el7.x86_64
+--> Processing Dependency: perl-macros for package: 4:perl-5.16.3-297.el7.x86_64
+--> Processing Dependency: perl(threads::shared) for package: 4:perl-5.16.3-297.                                                                             el7.x86_64
+--> Processing Dependency: perl(threads) for package: 4:perl-5.16.3-297.el7.x86_                                                                             64
+--> Processing Dependency: perl(constant) for package: 4:perl-5.16.3-297.el7.x86                                                                             _64
+--> Processing Dependency: perl(Time::Local) for package: 4:perl-5.16.3-297.el7.                                                                             x86_64
+--> Processing Dependency: perl(Time::HiRes) for package: 4:perl-5.16.3-297.el7.                                                                             x86_64
+--> Processing Dependency: perl(Storable) for package: 4:perl-5.16.3-297.el7.x86                                                                             _64
+--> Processing Dependency: perl(Socket) for package: 4:perl-5.16.3-297.el7.x86_6                                                                             4
+--> Processing Dependency: perl(Scalar::Util) for package: 4:perl-5.16.3-297.el7                                                                             .x86_64
+--> Processing Dependency: perl(Pod::Simple::XHTML) for package: 4:perl-5.16.3-2                                                                             97.el7.x86_64
+--> Processing Dependency: perl(Pod::Simple::Search) for package: 4:perl-5.16.3-                                                                             297.el7.x86_64
+--> Processing Dependency: perl(Getopt::Long) for package: 4:perl-5.16.3-297.el7                                                                             .x86_64
+--> Processing Dependency: perl(Filter::Util::Call) for package: 4:perl-5.16.3-2                                                                             97.el7.x86_64
+--> Processing Dependency: perl(File::Temp) for package: 4:perl-5.16.3-297.el7.x                                                                             86_64
+--> Processing Dependency: perl(File::Spec::Unix) for package: 4:perl-5.16.3-297                                                                             .el7.x86_64
+--> Processing Dependency: perl(File::Spec::Functions) for package: 4:perl-5.16.                                                                             3-297.el7.x86_64
+--> Processing Dependency: perl(File::Spec) for package: 4:perl-5.16.3-297.el7.x                                                                             86_64
+--> Processing Dependency: perl(File::Path) for package: 4:perl-5.16.3-297.el7.x                                                                             86_64
+--> Processing Dependency: perl(Exporter) for package: 4:perl-5.16.3-297.el7.x86                                                                             _64
+--> Processing Dependency: perl(Cwd) for package: 4:perl-5.16.3-297.el7.x86_64
+--> Processing Dependency: perl(Carp) for package: 4:perl-5.16.3-297.el7.x86_64
+--> Running transaction check
+---> Package perl-Carp.noarch 0:1.26-244.el7 will be installed
+---> Package perl-Exporter.noarch 0:5.68-3.el7 will be installed
+---> Package perl-File-Path.noarch 0:2.09-2.el7 will be installed
+---> Package perl-File-Temp.noarch 0:0.23.01-3.el7 will be installed
+---> Package perl-Filter.x86_64 0:1.49-3.el7 will be installed
+---> Package perl-Getopt-Long.noarch 0:2.40-3.el7 will be installed
+--> Processing Dependency: perl(Pod::Usage) >= 1.14 for package: perl-Getopt-Lon                                                                             g-2.40-3.el7.noarch
+--> Processing Dependency: perl(Text::ParseWords) for package: perl-Getopt-Long-                                                                             2.40-3.el7.noarch
+---> Package perl-PathTools.x86_64 0:3.40-5.el7 will be installed
+---> Package perl-Pod-Simple.noarch 1:3.28-4.el7 will be installed
+--> Processing Dependency: perl(Pod::Escapes) >= 1.04 for package: 1:perl-Pod-Si                                                                             mple-3.28-4.el7.noarch
+--> Processing Dependency: perl(Encode) for package: 1:perl-Pod-Simple-3.28-4.el                                                                             7.noarch
+---> Package perl-Scalar-List-Utils.x86_64 0:1.27-248.el7 will be installed
+---> Package perl-Socket.x86_64 0:2.010-5.el7 will be installed
+---> Package perl-Storable.x86_64 0:2.45-3.el7 will be installed
+---> Package perl-Time-HiRes.x86_64 4:1.9725-3.el7 will be installed
+---> Package perl-Time-Local.noarch 0:1.2300-2.el7 will be installed
+---> Package perl-constant.noarch 0:1.27-2.el7 will be installed
+---> Package perl-macros.x86_64 4:5.16.3-297.el7 will be installed
+---> Package perl-threads.x86_64 0:1.87-4.el7 will be installed
+---> Package perl-threads-shared.x86_64 0:1.43-6.el7 will be installed
+--> Running transaction check
+---> Package perl-Encode.x86_64 0:2.51-7.el7 will be installed
+---> Package perl-Pod-Escapes.noarch 1:1.04-297.el7 will be installed
+---> Package perl-Pod-Usage.noarch 0:1.63-3.el7 will be installed
+--> Processing Dependency: perl(Pod::Text) >= 3.15 for package: perl-Pod-Usage-1                                                                             .63-3.el7.noarch
+--> Processing Dependency: perl-Pod-Perldoc for package: perl-Pod-Usage-1.63-3.e                                                                             l7.noarch
+---> Package perl-Text-ParseWords.noarch 0:3.29-4.el7 will be installed
+--> Running transaction check
+---> Package perl-Pod-Perldoc.noarch 0:3.20-4.el7 will be installed
+--> Processing Dependency: perl(parent) for package: perl-Pod-Perldoc-3.20-4.el7                                                                             .noarch
+--> Processing Dependency: perl(HTTP::Tiny) for package: perl-Pod-Perldoc-3.20-4                                                                             .el7.noarch
+---> Package perl-podlators.noarch 0:2.5.1-3.el7 will be installed
+--> Running transaction check
+---> Package perl-HTTP-Tiny.noarch 0:0.033-3.el7 will be installed
+---> Package perl-parent.noarch 1:0.225-244.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package                    Arch       Version                 Repository  Size
+================================================================================
+Installing:
+ postgresql10-contrib       x86_64     10.15-1PGDG.rhel7       pgdg10     588 k
+ postgresql10-server        x86_64     10.15-1PGDG.rhel7       pgdg10     4.5 M
+Installing for dependencies:
+ libicu                     x86_64     50.2-4.el7_7            base       6.9 M
+ libxslt                    x86_64     1.1.28-6.el7            base       242 k
+ perl                       x86_64     4:5.16.3-297.el7        base       8.0 M
+ perl-Carp                  noarch     1.26-244.el7            base        19 k
+ perl-Encode                x86_64     2.51-7.el7              base       1.5 M
+ perl-Exporter              noarch     5.68-3.el7              base        28 k
+ perl-File-Path             noarch     2.09-2.el7              base        26 k
+ perl-File-Temp             noarch     0.23.01-3.el7           base        56 k
+ perl-Filter                x86_64     1.49-3.el7              base        76 k
+ perl-Getopt-Long           noarch     2.40-3.el7              base        56 k
+ perl-HTTP-Tiny             noarch     0.033-3.el7             base        38 k
+ perl-PathTools             x86_64     3.40-5.el7              base        82 k
+ perl-Pod-Escapes           noarch     1:1.04-297.el7          base        52 k
+ perl-Pod-Perldoc           noarch     3.20-4.el7              base        87 k
+ perl-Pod-Simple            noarch     1:3.28-4.el7            base       216 k
+ perl-Pod-Usage             noarch     1.63-3.el7              base        27 k
+ perl-Scalar-List-Utils     x86_64     1.27-248.el7            base        36 k
+ perl-Socket                x86_64     2.010-5.el7             base        49 k
+ perl-Storable              x86_64     2.45-3.el7              base        77 k
+ perl-Text-ParseWords       noarch     3.29-4.el7              base        14 k
+ perl-Time-HiRes            x86_64     4:1.9725-3.el7          base        45 k
+ perl-Time-Local            noarch     1.2300-2.el7            base        24 k
+ perl-constant              noarch     1.27-2.el7              base        19 k
+ perl-libs                  x86_64     4:5.16.3-297.el7        base       689 k
+ perl-macros                x86_64     4:5.16.3-297.el7        base        44 k
+ perl-parent                noarch     1:0.225-244.el7         base        12 k
+ perl-podlators             noarch     2.5.1-3.el7             base       112 k
+ perl-threads               x86_64     1.87-4.el7              base        49 k
+ perl-threads-shared        x86_64     1.43-6.el7              base        39 k
+ postgresql10               x86_64     10.15-1PGDG.rhel7       pgdg10     1.6 M
+ postgresql10-libs          x86_64     10.15-1PGDG.rhel7       pgdg10     358 k
+
+Transaction Summary
+================================================================================
+Install  2 Packages (+31 Dependent packages)
+
+Total download size: 26 M
+Installed size: 91 M
+Downloading packages:
+(1/33): libxslt-1.1.28-6.el7.x86_64.rpm                    | 242 kB   00:00
+(2/33): libicu-50.2-4.el7_7.x86_64.rpm                     | 6.9 MB   00:00
+(3/33): perl-5.16.3-297.el7.x86_64.rpm                     | 8.0 MB   00:00
+(4/33): perl-Carp-1.26-244.el7.noarch.rpm                  |  19 kB   00:00
+(5/33): perl-Exporter-5.68-3.el7.noarch.rpm                |  28 kB   00:00
+(6/33): perl-File-Path-2.09-2.el7.noarch.rpm               |  26 kB   00:00
+(7/33): perl-Encode-2.51-7.el7.x86_64.rpm                  | 1.5 MB   00:00
+(8/33): perl-File-Temp-0.23.01-3.el7.noarch.rpm            |  56 kB   00:00
+(9/33): perl-Filter-1.49-3.el7.x86_64.rpm                  |  76 kB   00:00
+(10/33): perl-Getopt-Long-2.40-3.el7.noarch.rpm            |  56 kB   00:00
+(11/33): perl-HTTP-Tiny-0.033-3.el7.noarch.rpm             |  38 kB   00:00
+(12/33): perl-PathTools-3.40-5.el7.x86_64.rpm              |  82 kB   00:00
+(13/33): perl-Pod-Escapes-1.04-297.el7.noarch.rpm          |  52 kB   00:00
+(14/33): perl-Pod-Perldoc-3.20-4.el7.noarch.rpm            |  87 kB   00:00
+(15/33): perl-Pod-Simple-3.28-4.el7.noarch.rpm             | 216 kB   00:00
+(16/33): perl-Pod-Usage-1.63-3.el7.noarch.rpm              |  27 kB   00:00
+(17/33): perl-Scalar-List-Utils-1.27-248.el7.x86_64.rpm    |  36 kB   00:00
+(18/33): perl-Socket-2.010-5.el7.x86_64.rpm                |  49 kB   00:00
+(19/33): perl-Storable-2.45-3.el7.x86_64.rpm               |  77 kB   00:00
+(20/33): perl-Time-HiRes-1.9725-3.el7.x86_64.rpm           |  45 kB   00:00
+(21/33): perl-Time-Local-1.2300-2.el7.noarch.rpm           |  24 kB   00:00
+(22/33): perl-constant-1.27-2.el7.noarch.rpm               |  19 kB   00:00
+(23/33): perl-Text-ParseWords-3.29-4.el7.noarch.rpm        |  14 kB   00:00
+(24/33): perl-macros-5.16.3-297.el7.x86_64.rpm             |  44 kB   00:00
+(25/33): perl-libs-5.16.3-297.el7.x86_64.rpm               | 689 kB   00:00
+(26/33): perl-parent-0.225-244.el7.noarch.rpm              |  12 kB   00:00
+(27/33): perl-podlators-2.5.1-3.el7.noarch.rpm             | 112 kB   00:00
+(28/33): perl-threads-shared-1.43-6.el7.x86_64.rpm         |  39 kB   00:00
+(29/33): perl-threads-1.87-4.el7.x86_64.rpm                |  49 kB   00:00
+warning: /var/cache/yum/x86_64/7/pgdg10/packages/postgresql10-10.15-1PGDG.rhel7.                                                                             x86_64.rpm: Header V4 DSA/SHA1 Signature, key ID 442df0f8: NOKEY
+Public key for postgresql10-10.15-1PGDG.rhel7.x86_64.rpm is not installed
+(30/33): postgresql10-10.15-1PGDG.rhel7.x86_64.rpm         | 1.6 MB   00:01
+(31/33): postgresql10-libs-10.15-1PGDG.rhel7.x86_64.rpm    | 358 kB   00:00
+(32/33): postgresql10-contrib-10.15-1PGDG.rhel7.x86_64.rpm | 588 kB   00:02
+(33/33): postgresql10-server-10.15-1PGDG.rhel7.x86_64.rpm  | 4.5 MB   00:01
+--------------------------------------------------------------------------------
+Total                                              6.0 MB/s |  26 MB  00:04
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+Importing GPG key 0x442DF0F8:
+ Userid     : "PostgreSQL RPM Building Project <pgsqlrpms-hackers@pgfoundry.org>                                                                             "
+ Fingerprint: 68c9 e2b9 1a37 d136 fe74 d176 1f16 d2e1 442d f0f8
+ Package    : pgdg-redhat-repo-42.0-11.noarch (installed)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+Warning: RPMDB altered outside of yum.
+  Installing : postgresql10-libs-10.15-1PGDG.rhel7.x86_64                  1/33
+  Installing : libicu-50.2-4.el7_7.x86_64                                  2/33
+  Installing : postgresql10-10.15-1PGDG.rhel7.x86_64                       3/33
+  Installing : postgresql10-server-10.15-1PGDG.rhel7.x86_64                4/33
+  Installing : 1:perl-parent-0.225-244.el7.noarch                          5/33
+  Installing : perl-HTTP-Tiny-0.033-3.el7.noarch                           6/33
+  Installing : perl-podlators-2.5.1-3.el7.noarch                           7/33
+  Installing : perl-Pod-Perldoc-3.20-4.el7.noarch                          8/33
+  Installing : 1:perl-Pod-Escapes-1.04-297.el7.noarch                      9/33
+  Installing : perl-Encode-2.51-7.el7.x86_64                              10/33
+  Installing : perl-Text-ParseWords-3.29-4.el7.noarch                     11/33
+  Installing : perl-Pod-Usage-1.63-3.el7.noarch                           12/33
+  Installing : 4:perl-libs-5.16.3-297.el7.x86_64                          13/33
+  Installing : perl-Storable-2.45-3.el7.x86_64                            14/33
+  Installing : perl-Exporter-5.68-3.el7.noarch                            15/33
+  Installing : perl-constant-1.27-2.el7.noarch                            16/33
+  Installing : perl-Socket-2.010-5.el7.x86_64                             17/33
+  Installing : perl-Time-Local-1.2300-2.el7.noarch                        18/33
+  Installing : perl-Carp-1.26-244.el7.noarch                              19/33
+  Installing : 4:perl-Time-HiRes-1.9725-3.el7.x86_64                      20/33
+  Installing : perl-PathTools-3.40-5.el7.x86_64                           21/33
+  Installing : perl-Scalar-List-Utils-1.27-248.el7.x86_64                 22/33
+  Installing : 1:perl-Pod-Simple-3.28-4.el7.noarch                        23/33
+  Installing : perl-File-Temp-0.23.01-3.el7.noarch                        24/33
+  Installing : perl-File-Path-2.09-2.el7.noarch                           25/33
+  Installing : perl-threads-shared-1.43-6.el7.x86_64                      26/33
+  Installing : perl-threads-1.87-4.el7.x86_64                             27/33
+  Installing : perl-Filter-1.49-3.el7.x86_64                              28/33
+  Installing : 4:perl-macros-5.16.3-297.el7.x86_64                        29/33
+  Installing : perl-Getopt-Long-2.40-3.el7.noarch                         30/33
+  Installing : 4:perl-5.16.3-297.el7.x86_64                               31/33
+  Installing : libxslt-1.1.28-6.el7.x86_64                                32/33
+  Installing : postgresql10-contrib-10.15-1PGDG.rhel7.x86_64              33/33
+  Verifying  : perl-HTTP-Tiny-0.033-3.el7.noarch                           1/33
+  Verifying  : perl-threads-shared-1.43-6.el7.x86_64                       2/33
+  Verifying  : perl-Storable-2.45-3.el7.x86_64                             3/33
+  Verifying  : 4:perl-libs-5.16.3-297.el7.x86_64                           4/33
+  Verifying  : perl-Exporter-5.68-3.el7.noarch                             5/33
+  Verifying  : perl-constant-1.27-2.el7.noarch                             6/33
+  Verifying  : perl-PathTools-3.40-5.el7.x86_64                            7/33
+  Verifying  : postgresql10-10.15-1PGDG.rhel7.x86_64                       8/33
+  Verifying  : perl-Socket-2.010-5.el7.x86_64                              9/33
+  Verifying  : 1:perl-parent-0.225-244.el7.noarch                         10/33
+  Verifying  : postgresql10-contrib-10.15-1PGDG.rhel7.x86_64              11/33
+  Verifying  : 1:perl-Pod-Escapes-1.04-297.el7.noarch                     12/33
+  Verifying  : perl-File-Temp-0.23.01-3.el7.noarch                        13/33
+  Verifying  : 1:perl-Pod-Simple-3.28-4.el7.noarch                        14/33
+  Verifying  : perl-Time-Local-1.2300-2.el7.noarch                        15/33
+  Verifying  : libicu-50.2-4.el7_7.x86_64                                 16/33
+  Verifying  : postgresql10-libs-10.15-1PGDG.rhel7.x86_64                 17/33
+  Verifying  : perl-Carp-1.26-244.el7.noarch                              18/33
+  Verifying  : 4:perl-Time-HiRes-1.9725-3.el7.x86_64                      19/33
+  Verifying  : perl-Scalar-List-Utils-1.27-248.el7.x86_64                 20/33
+  Verifying  : perl-Pod-Usage-1.63-3.el7.noarch                           21/33
+  Verifying  : perl-Encode-2.51-7.el7.x86_64                              22/33
+  Verifying  : perl-Pod-Perldoc-3.20-4.el7.noarch                         23/33
+  Verifying  : perl-podlators-2.5.1-3.el7.noarch                          24/33
+  Verifying  : perl-File-Path-2.09-2.el7.noarch                           25/33
+  Verifying  : libxslt-1.1.28-6.el7.x86_64                                26/33
+  Verifying  : perl-threads-1.87-4.el7.x86_64                             27/33
+  Verifying  : perl-Filter-1.49-3.el7.x86_64                              28/33
+  Verifying  : perl-Getopt-Long-2.40-3.el7.noarch                         29/33
+  Verifying  : perl-Text-ParseWords-3.29-4.el7.noarch                     30/33
+  Verifying  : postgresql10-server-10.15-1PGDG.rhel7.x86_64               31/33
+  Verifying  : 4:perl-5.16.3-297.el7.x86_64                               32/33
+  Verifying  : 4:perl-macros-5.16.3-297.el7.x86_64                        33/33
+
+Installed:
+  postgresql10-contrib.x86_64 0:10.15-1PGDG.rhel7
+  postgresql10-server.x86_64 0:10.15-1PGDG.rhel7
+
+Dependency Installed:
+  libicu.x86_64 0:50.2-4.el7_7
+  libxslt.x86_64 0:1.1.28-6.el7
+  perl.x86_64 4:5.16.3-297.el7
+  perl-Carp.noarch 0:1.26-244.el7
+  perl-Encode.x86_64 0:2.51-7.el7
+  perl-Exporter.noarch 0:5.68-3.el7
+  perl-File-Path.noarch 0:2.09-2.el7
+  perl-File-Temp.noarch 0:0.23.01-3.el7
+  perl-Filter.x86_64 0:1.49-3.el7
+  perl-Getopt-Long.noarch 0:2.40-3.el7
+  perl-HTTP-Tiny.noarch 0:0.033-3.el7
+  perl-PathTools.x86_64 0:3.40-5.el7
+  perl-Pod-Escapes.noarch 1:1.04-297.el7
+  perl-Pod-Perldoc.noarch 0:3.20-4.el7
+  perl-Pod-Simple.noarch 1:3.28-4.el7
+  perl-Pod-Usage.noarch 0:1.63-3.el7
+  perl-Scalar-List-Utils.x86_64 0:1.27-248.el7
+  perl-Socket.x86_64 0:2.010-5.el7
+  perl-Storable.x86_64 0:2.45-3.el7
+  perl-Text-ParseWords.noarch 0:3.29-4.el7
+  perl-Time-HiRes.x86_64 4:1.9725-3.el7
+  perl-Time-Local.noarch 0:1.2300-2.el7
+  perl-constant.noarch 0:1.27-2.el7
+  perl-libs.x86_64 4:5.16.3-297.el7
+  perl-macros.x86_64 4:5.16.3-297.el7
+  perl-parent.noarch 1:0.225-244.el7
+  perl-podlators.noarch 0:2.5.1-3.el7
+  perl-threads.x86_64 0:1.87-4.el7
+  perl-threads-shared.x86_64 0:1.43-6.el7
+  postgresql10.x86_64 0:10.15-1PGDG.rhel7
+  postgresql10-libs.x86_64 0:10.15-1PGDG.rhel7
+
+Complete!
+[root@ip-172-31-15-24 ~]# /usr/pgsql-10/bin/postgresql-10-setup initdb
+Initializing database ... OK
+
+[root@ip-172-31-15-24 ~]# vi /var/lib/pgsql/10/data/pg_hba.conf
+[root@ip-172-31-15-24 ~]# vi /var/lib/pgsql/10/data/pg_hba.conf
+
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     trust
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     peer
+host    replication     all             127.0.0.1/32            ident
+host    replication     all             ::1/128                 ident
+
+
+
+[root@ip-172-31-15-24 ~]# systemctl enable postgresql-10
+Created symlink from /etc/systemd/system/multi-user.target.wants/postgresql-10.service to /usr/lib/systemd/system/postgresql-10.service.
+[root@ip-172-31-15-24 ~]# systemctl start postgresql-10
+[root@ip-172-31-15-24 ~]# passwd postgres
+Changing password for user postgres.
+New password:
+BAD PASSWORD: The password contains the user name in some form
+Retype new password:
+passwd: all authentication tokens updated successfully.
+[root@ip-172-31-15-24 ~]#
+[root@ip-172-31-15-24 ~]#
+[root@ip-172-31-15-24 ~]# su - postgres
+Last failed login: Tue Dec 29 08:36:14 UTC 2020 from 96.57.153.210 on ssh:notty
+There were 2 failed login attempts since the last successful login.
+-bash-4.2$ psql
+psql (10.15)
+Type "help" for help.
+
+postgres=# create database sonarqubedb;
+CREATE DATABASE
+postgres=# create user sonarqube with encrypted password 'Balic@123';
+CREATE ROLE
+postgres=# grant all privileges on database sonarqubedb to sonarqube
+postgres-#
+postgres-# grant all privileges on database sonarqubedb to sonarqube;
+ERROR:  syntax error at or near "grant"
+LINE 2: grant all privileges on database sonarqubedb to sonarqube;
+        ^
+postgres=# grant all privileges on database sonarqubedb to sonarqube
+postgres-# \l+
+                                                                     List of databases
+    Name     |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   |  Size   | Tablespace |                Description
+-------------+----------+----------+-------------+-------------+-----------------------+---------+------------+--------------------------------------------
+ postgres    | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 7863 kB | pg_default | default administrative connection database
+ sonarqubedb | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |                       | 7729 kB | pg_default |
+ template0   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +| 7729 kB | pg_default | unmodifiable empty database
+             |          |          |             |             | postgres=CTc/postgres |         |            |
+ template1   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +| 7729 kB | pg_default | default template for new databases
+             |          |          |             |             | postgres=CTc/postgres |         |            |
+(4 rows)
+
+postgres-#\q
+
+install jdk
+
+sudo yum install java-11-openjdk-devel -y
+
+change
+
+sysctl -w vm.max_map_count=262144
+
+update-alternatives --config java
+ 
+Refer this site -> https://devopscube.com/setup-and-configure-sonarqube-on-linux/
+
+Sonarqube downloading and installation
+
+1) wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.6.0.39681.zip
+
+sudo unzip sonarqube-8.6.zip
+sudo mv sonarqube-8.6 sonarqube
+
+
+sudo vi /opt/sonarqube/conf/sonar.properties
+
+
+
+# Property values can:
+# - be overridden by environment variables. The name of the corresponding environment variable is the
+#   upper-cased name of the property where all the dot ('.') and dash ('-') characters are replaced by
+#   underscores ('_'). For example, to override 'sonar.web.systemPasscode' use 'SONAR_WEB_SYSTEMPASSCODE'.
+# - be encrypted. See https://redirect.sonarsource.com/doc/settings-encryption.html
+
+#--------------------------------------------------------------------------------------------------
+# DATABASE
+#
+# IMPORTANT:
+# - The embedded H2 database is used by default. It is recommended for tests but not for
+#   production use. Supported databases are Oracle, PostgreSQL and Microsoft SQLServer.
+# - Changes to database connection URL (sonar.jdbc.url) can affect SonarSource licensed products.
+
+# User credentials.
+# Permissions to create tables, indices and triggers must be granted to JDBC user.
+# The schema must be created first.
+sonar.jdbc.username=sonarqube
+sonar.jdbc.password=Balic@123
+
+#----- Embedded Database (default)
+# H2 embedded database server listening port, defaults to 9092
+#sonar.embeddedDatabase.port=9092
+
+
+#----- Oracle 11g/12c/18c/19c
+# The Oracle JDBC driver must be copied into the directory extensions/jdbc-driver/oracle/.
+# Only the thin client is supported, and we recommend using the latest Oracle JDBC driver. See
+# https://jira.sonarsource.com/browse/SONAR-9758 for more details.
+# If you need to set the schema, please refer to http://jira.sonarsource.com/browse/SONAR-5000
+#sonar.jdbc.url=jdbc:oracle:thin:@localhost:1521/XE
+
+
+#----- PostgreSQL 9.3 or greater
+# By default the schema named "public" is used. It can be overridden with the parameter "currentSchema".
+sonar.jdbc.url=jdbc:postgresql://localhost/sonarqubedb
+
+##############################
+sudo useradd sonar
+sudo chown -R sonar:sonar /opt/sonarqube
+
+
+sudo su - sonar
+
+cd /opt/sonarqube/bin/linux-x86-64 
+
+
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=simple
+User=sonar
+Group=sonar
+PermissionsStartOnly=true
+ExecStart=/bin/nohup java -Xms32m -Xmx32m -Djava.net.preferIPv4Stack=true -jar /opt/sonarqube/lib/sonar-application-8.6.0.39681.jar
+StandardOutput=syslog
+LimitNOFILE=65536
+LimitNPROC=8192
+TimeoutStartSec=5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+sudo systemctl start sonarqube
+sudo systemctl enable sonarqube
+
+cd /opt/sonarqube/logs
+
+[root@ip-172-31-15-24 logs]# ls -lhrt
+total 180K
+-rw-r--r-- 1 sonar sonar   88 Dec  9 10:22 README.txt
+-rw-r--r-- 1 sonar sonar 3.2K Dec 29 09:18 sonar-20201229.log
+-rw-r--r-- 1 sonar sonar  23K Dec 29 09:33 es.log
+-rw-r--r-- 1 sonar sonar 126K Dec 29 09:33 web.log
+-rw-r--r-- 1 sonar sonar 4.0K Dec 29 09:33 sonar.log
+-rw-r--r-- 1 sonar sonar  935 Dec 29 09:33 ce.log
+-rw-r--r-- 1 sonar sonar  12K Dec 29 09:34 access.log
+
+sonarqube userid and password
+
+admin
+Balic@123
+
+
+#############################Declarative Ppeline#####################
+
+after start up server
+
+change jenkins url, sonarqube url, Quality Gates - Sonarqube ...sonarqube url
+
+https://www.youtube.com/watch?v=pzbrVVy6ul4
+
+https://github.com/ravdy/hello-world
+
+https://www.youtube.com/watch?v=kO7wrtY2b3E
+
+To sart declarative pipeline first install pipeline plugin in jenkins
+
+
+Working code after 2 hours efforts
+#############################################################
+pipeline{
+    agent any
+    tools {
+    maven 'Maven'
+  }
+    stages{
+            stage ('git checkout'){
+                steps{  
+                    git branch: 'master', url: 'https://github.com/ravdy/hello-world'
+            }
+        }
+            stage ('build'){
+                steps{  
+                    sh 'mvn -B -DskipTests clean package' 
+            }
+        }
+    }
+}
+#############################################################
+
+pipeline{
+    agent any
+    tools {
+    maven 'Maven'
+  }
+    stages{
+            stage ('git checkout'){
+                steps{  
+                    git branch: 'master', url: 'https://github.com/jenkins-docs/simple-java-maven-app.git'
+            }
+        }
+            stage ('build'){
+                steps{  
+                    sh 'mvn clean install' 
+            }
+        }
+            stage ('test'){
+                steps{  
+                    sh 'mvn test' 
+            }
+         }
+    }
+}
+#############################################################
+
+sonar tables
+11668965fbd7660305745ad976e4e001cf1b77e2
+sonarcreds
+db1fc802281dd4cfe710cdcb0bb94960d27ecd3b
+
+#############################################################
+
+Nexus integration
+https://www.youtube.com/watch?v=GJpZPpMqiYs
+https://hub.docker.com/r/sonatype/nexus3
+
+https://www.youtube.com/watch?v=ueaXn57HRHQ&t=2s  - standard way
+
+
+mkdir /nexus-data && chown -R 200 /nexus-data
+
+docker run -d -p 8081:8081 --name nexus -v /nexus-data:/nexus-data sonatype/nexus3
+
+
+installing nexus
+
+[root@ip-172-31-6-155 ~]# history
+    1  yum install java-1.8.0-openjdk-devel
+    2  java -version
+    3  update-alternatives --config java
+    4  free -g
+    5  curl -fsSL https://get.docker.com -o get-docker.sh
+    6  sudo sh get-docker.sh
+    7  docker ps
+    8  systemctl start docker
+    9  docker ps
+   10  docker info
+   11  mkdir /nexus-data && chown -R 200 /nexus-data
+   12  docker run -d -p 8081:8081 --name nexus -v /nexus-data:/nexus-data sonatype/nexus3
+   13  docker ps
+   14  docker logs 2ef6b850c189
+   15  cat /nexus-data/admin.password/
+   16  cd /nexus-data/
+   17  ls
+   18  ls -lhrt
+   19  cat admin.password
+   20  cd
+   21  history
+[root@ip-172-31-6-155 ~]#
+
+http://65.0.45.114:8080/
+http://65.0.45.114:9000/projects
+http://15.207.14.226:8081/#browse/browse
+
+
+install nexus articat uploader plugin
+
+my-app-1.0-SNAPSHOT.jar
+
+
+
+/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonarscanner/bin
+
+#####################################################################################################
+
+Sonarscan works with below declarative pipline
+
+pipeline{
+    environment {
+      scannerhome = tool 'sonarscanner'
+    }
+    agent any
+    tools {
+    maven 'Maven'
+  }
+    stages{
+            stage ('git checkout'){
+                steps{  
+                    git branch: 'master', url: 'https://github.com/jenkins-docs/simple-java-maven-app.git'
+            }
+        }
+            stage ('build'){
+                steps{  
+                    sh 'mvn clean install' 
+            }
+        }
+            stage ('Sonar Analysis'){
+                steps{  
+                     withSonarQubeEnv('sonarqube'){
+                     sh 'mvn sonar:sonar'
+                }
+            }
+        }   
+    }
+}
+
+############################################################################################################# 
+
+https://www.youtube.com/watch?v=f0Rbk1iVhnc - total steps - decalrative pipeline
+
+
+172.31.15.24	jenkins-sonar
+172.31.6.155	nexus
+172.31.13.251	ril-registry
+
+            stage ('docker build'){
+                steps{
+                    sh 'docker build -t ril-registry:5000/helloworld:1.1.0 .'
+					
+
+pipeline{
+    environment {
+      scannerhome = tool 'sonarscanner'
+    }
+    agent any
+    tools {
+    maven 'maven'
+  }
+    stages{
+            stage ('git checkout'){
+                steps{  
+                    git branch: 'master', url: 'https://github.com/par1985parab/santoshp.git'
+            }
+        }
+            stage ('build'){
+                steps{  
+                    sh 'mvn clean install' 
+            }
+        }
+            stage ('Sonar Analysis'){
+                steps{  
+                     withSonarQubeEnv('sonarqube'){
+                     sh 'mvn sonar:sonar'
+                    }
+                }
+            }
+            stage ('artifacts upload'){
+                steps{
+                    nexusArtifactUploader artifacts: [[artifactId: 'maven', classifier: '', file: '/var/jenkins_home/workspace/Maven_Pipeline/target/my-app-1.0-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus', groupId: 'santosh', nexusUrl: '52.66.251.231:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-snapshots', version: '1.0-SNAPSHOT'
+                }
+            }
+            stage ('docker build'){
+                steps{
+                    sh 'docker build -t ril-registry:5000/helloworld:1.1.0 .'
+                }
+            }
+        }   
+    }
+	
+dcd92a12bb2c66d9680f0e71642b55fc167779f3 - sonar keys - jenkins-sonar
+
+
+windows agent password - E$dZbYlauP*BloeCdSwc)nHwzKX$FaSd
+
+jenkins windows agent installation - https://www.youtube.com/watch?v=yZL3uHy4P-8
+
+Connect agent to Jenkins one of these ways:
+
+Java Web Start is not available for the JVM version running Jenkins
+
+Run from agent command line:
+
+java -jar agent.jar -jnlpUrl http://13.232.141.62:8080/computer/windows_agent/slave-agent.jnlp -secret e348610d374d6113b37b9fc0ce8dccc872f45ea56e635ec82c348b6c714ba392 -workDir "C:\windows_agent"
+Run from agent command line, with the secret stored in a file:
+
+echo e348610d374d6113b37b9fc0ce8dccc872f45ea56e635ec82c348b6c714ba392 > secret-file
+java -jar agent.jar -jnlpUrl http://52.66.245.29:8080/computer/windows_agent/slave-agent.jnlp -secret @secret-file -workDir "C:\windows_agent"
+
+##########################################################################
+
+Azure DevOps-Project
+https://www.youtube.com/watch?v=hzRmutb4kdk
+
+https://github.com/ravikaanthe/gs-spring-boot.git 
+
+
+
+
+
+git clone --single-branch --branch bitwiseman-patch-1 https://github.com/par1985parab/santoshp.git
+
+6f2bb9c0cababd8ca5a11cdf357fb164b0525043 - qualitygate tomek
+6f2bb9c0cababd8ca5a11cdf357fb164b0525043
+
+#########################################################################
+sonarqube all branch analysis
+
+https://github.com/mc1arke/sonarqube-community-branch-plugin
+
+download plugin -> https://github.com/mc1arke/sonarqube-community-branch-plugin/releases
+
+https://docs.sonarqube.org/latest/branches/overview/
+
+https://github.com/mc1arke/sonarqube-community-branch-plugin#run-analysis-of-branches
+
+Git strategy
+
+https://docs.microsoft.com/en-us/azure/devops/repos/git/git-branching-guidance?view=azure-devops
+
+
+
+Sonarqube user creation
+
+https://www.youtube.com/watch?v=Nt1FCbJpzvw
+
+sonarqube email
+
+https://medium.com/@amitvermaa93/sonarqube-report-on-e-mail-f7764e20b38a
+https://medium.com/@amitvermaa93/sonarqube-report-on-e-mail-f7764e20b38a
+
+################################################################################################################################################
+how sonarqube scan the code?
+Blackduck in azure devops -> Black Duck by Synopsys
+OWASP - ZAP?
+
+
+
+azure test plan
+https://www.youtube.com/watch?v=hho2rFQqbfc - seen til 13:41
+https://www.youtube.com/watch?v=abrEhuKNxTg -  comments ate good - by ravi rathod
+
+
+Integrate with Sonatype Nexus
+
+/target/my-app-1.0-SNAPSHOT.jar
+
+
+/home/vsts/work/1/a/target/my-app-1.0-SNAPSHOT.jar
+
+
+https://www.youtube.com/watch?v=sSrqRVxR6NI  - Nexus tutotrial - Nicely explained
+
+##################################################Angular deployment on azure devops############################################################################
+
+https://www.youtube.com/watch?v=NFqrWsUPCAM
+
+Angular:-
+NPM to build distribution file -> npm run build -> will create distribution file- create distribution file - dist & e2e
+index.html is importatnt.
+
+In azure devops portal
+Create buid pieplien with classic editor option -. select node.js with grunt
+
+###################################################Dot Net on azure devops##############################################################################
+azuredemo
+Badlapur@777
+
+https://about.gitlab.com/install/#centos-7
+
+
+sudo EXTERNAL_URL="http://20.197.57.76" yum install -y gitlab-ee
+
+EXTERNAL_URL="http://20.197.57.76" yum install -y gitlab-ce
+
+yum install java-1.8.0-openjdk-devel
+
+yum install curl policycoreutils-python openssh-server 
+
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
+
+EXTERNAL_URL="http://20.197.57.76" yum install -y gitlab-ce
+
+gitlab-ctl reconfigure
+
+
+

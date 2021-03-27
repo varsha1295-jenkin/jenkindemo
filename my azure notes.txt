@@ -1,0 +1,51 @@
+ 1.portal.azure.com    to create azure trail account 
+ 
+ username: varsha.axfone@gmail.com
+ password: Shivansh@25
+ 
+ 
+ step 1. : whenever dashboard open select 1st option as Start with an Azure free trial >> fill the info
+ 
+ Dashbaord> Virtual machin create user ....>>
+ username: varsha_1210, passwd : Varsha@121095
+
+public ip address of VM    
+23.101.140.21
+
+after creation of virtual machin next steps
+
+step 2: download putty for 64 bit if not have in machin
+open the putty
+enter public ip address of VM and open it
+when terminal will open enter username password :   username: varsha_1210, passwd : Varsha@121095
+
+then go into superuser through command sudo -i
+to check virtual machine space df -hT  
+then install jdk using centos command :  sudo yum install java-1.8.0 -openjdk -devel
+to checck java install or not javac -version
+
+steps 3:
+to install jenkins
+
+jenkins.io website in that following commands run to install jenkin repository
+https://pkg.jenkins.io/redhat-stable/---------website link******
+
+ sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+ sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+ 
+ after that run command yum install jenkins ----here jenkins installation done
+ 
+ then run command systemctl start jenkins-------to start jenkins----
+ 
+ to check all running proceeses   ps -ef | grep java
+ 
+ 
+to start port no. on server ,, netstat -lntp grep | 24484 -process no. from above command get
+
+to write port no. into file run command vim /etc/sysconfig/jenkins 
+and check port 8080 is there
+then start jenkins in browser  23.101.140.21:8080
+
+
+
+ 
