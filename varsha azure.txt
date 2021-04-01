@@ -1,0 +1,164 @@
+portal.azure.com>create one
+
+virtual machine> start first trail
+
+
+sudo -i---super user
+
+to check virtual machine space df -hT
+
+linux file system search
+
+
+
+par1985.parab@gmail.com  jiju
+Unified@11
+
+
+docker run -d -p 8080:8080 -p 50000:50000 -v /home/centos:/var/jenkins_home jenkins/jenkins
+
+
+
+santosh parab8:43 PM
+par1985.parab@gmail.com
+Unified@11
+santosh parab8:48 PM
+docker run -d -p 8080:8080 -p 50000:50000 -v /home/centos:/var/jenkins_home jenkins/jenkins
+santosh parab9:00 PM
+Azure Portal -> Linux spin up - centos 7
+http://20.198.102.141/
+Install java - jdk 1.8.0.271-devel
+install docker
+jenkin image run
+santosh parab9:08 PM
+http://20.198.102.141/
+jenkindemo
+Badlapur@777
+santosh parab9:10 PM
+sudo -i
+docker ps
+http://20.198.102.141:8080/
+santosh parab9:13 PM
+ docker logs 8723d89bab92
+santosh parab9:14 PM
+5223275d519041358624744f4a81dc11
+
+
+
+login as: jenkindemo
+jenkindemo@104.211.116.228's password:
+Last login: Fri Mar 26 10:41:54 2021 from 103.137.93.16
+
+  Welcome to CentOS-7.9-x86_64-Minimal-30GiB-VHD-20210303_202003.
+
+  * Use "sudo su -" command in order to become root.
+
+  For your convenience, this image is provided by ProComputers.com.
+  Visit https://www.procomputers.com for more information.
+
+  If you don't want to see this message anymore, please remove
+  the content of the /etc/motd text file.
+
+26/03/2021
+
+[/jenkindemo@jenkindemo ~]$ sudo -i
+[root@jenkindemo ~]# docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+[root@jenkindemo ~]# docker ps -a
+CONTAINER ID   IMAGE             COMMAND                  CREATED        STATUS                      PORTS     NAMES
+ec82bd105bb2   jenkins/jenkins   "/sbin/tini -- /usr/…"   5 hours ago    Exited (143) 5 hours ago              inspiring_keller
+9ea9f1bb4329   jenkins/jenkins   "/sbin/tini -- /usr/…"   12 hours ago   Exited (143) 12 hours ago             busy_rhodes
+8723d89bab92   jenkins/jenkins   "/sbin/tini -- /usr/…"   24 hours ago   Exited (143) 24 hours ago             festive_elion
+e947580cba58   jenkins/jenkins   "/sbin/tini -- /usr/…"   24 hours ago   Exited (1) 24 hours ago               mystifying_swartz
+[root@jenkindemo ~]# docker rm ec82bd105bb2 9ea9f1bb4329 8723d89bab92 e947580cba58
+ec82bd105bb2
+9ea9f1bb4329
+8723d89bab92
+e947580cba58
+[root@jenkindemo ~]# docker run -d -p 8080:8080 -p 50000:50000 -v /home/centos:/var/jenkins_home jenkins/jenkins
+4e4d11e687c9a2ba2d5ba035c2022cc58324b1970e14c8040e45d7f15094530d
+[root@jenkindemo ~]# docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                                              NAMES
+4e4d11e687c9   jenkins/jenkins   "/sbin/tini -- /usr/…"   6 seconds ago   Up 5 seconds   0.0.0.0:8080->8080/tcp, 0.0.0.0:50000->50000/tcp   xenodochial_shtern
+[root@jenkindemo ~]# docker logs
+"docker logs" requires exactly 1 argument.
+See 'docker logs --help'.
+
+Usage:  docker logs [OPTIONS] CONTAINER
+
+Fetch the logs of a container
+[root@jenkindemo ~]# docker logs 4e4d11e687c9
+Running from: /usr/share/jenkins/jenkins.war
+webroot: EnvVars.masterEnvVars.get("JENKINS_HOME")
+2021-03-26 15:42:48.897+0000 [id=1]     INFO    org.eclipse.jetty.util.log.Log#initialized: Logging initialized @1495ms to org.eclipse.jetty.util.log.JavaUtilLog
+2021-03-26 15:42:49.049+0000 [id=1]     INFO    winstone.Logger#logInternal: Beginning extraction from war file
+2021-03-26 15:42:49.135+0000 [id=1]     WARNING o.e.j.s.handler.ContextHandler#setContextPath: Empty contextPath
+2021-03-26 15:42:49.186+0000 [id=1]     INFO    org.eclipse.jetty.server.Server#doStart: jetty-9.4.38.v20210224; built: 2021-02-24T20:25:07.675Z; git: 288f3cc74549e8a913bf363250b0744f2695b8e6; jvm 1.8.0_282-b08
+2021-03-26 15:42:51.551+0000 [id=1]     INFO    o.e.j.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2021-03-26 15:42:51.715+0000 [id=1]     INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: DefaultSessionIdManager workerName=node0
+2021-03-26 15:42:51.715+0000 [id=1]     INFO    o.e.j.s.s.DefaultSessionIdManager#doStart: No SessionScavenger set, using defaults
+2021-03-26 15:42:51.716+0000 [id=1]     INFO    o.e.j.server.session.HouseKeeper#startScavenging: node0 Scavenging every 660000ms
+2021-03-26 15:42:52.423+0000 [id=1]     INFO    hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
+2021-03-26 15:42:52.832+0000 [id=1]     INFO    o.e.j.s.handler.ContextHandler#doStart: Started w.@7a3793c7{Jenkins v2.285,/,file:///var/jenkins_home/war/,AVAILABLE}{/var/jenkins_home/war}
+2021-03-26 15:42:52.981+0000 [id=1]     INFO    o.e.j.server.AbstractConnector#doStart: Started ServerConnector@15975490{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+2021-03-26 15:42:52.981+0000 [id=1]     INFO    org.eclipse.jetty.server.Server#doStart: Started @5580ms
+2021-03-26 15:42:53.000+0000 [id=21]    INFO    winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled
+2021-03-26 15:42:54.319+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
+2021-03-26 15:42:57.182+0000 [id=28]    INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+2021-03-26 15:43:01.286+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+2021-03-26 15:43:01.347+0000 [id=26]    INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
+2021-03-26 15:43:02.838+0000 [id=27]    INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+2021-03-26 15:43:02.917+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: System config loaded
+2021-03-26 15:43:02.918+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: System config adapted
+2021-03-26 15:43:02.918+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+2021-03-26 15:43:02.923+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
+2021-03-26 15:43:02.962+0000 [id=42]    INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$0: Started Download metadata
+2021-03-26 15:43:02.978+0000 [id=42]    INFO    hudson.util.Retrier#start: Attempt #1 to do the action check updates server
+2021-03-26 15:43:03.107+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Completed initialization
+2021-03-26 15:43:03.293+0000 [id=20]    INFO    hudson.WebAppMain$3#run: Jenkins is fully up and running
+2021-03-26 15:43:10.934+0000 [id=42]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tasks.Maven.MavenInstaller
+2021-03-26 15:43:11.404+0000 [id=42]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.plugins.gradle.GradleInstaller
+2021-03-26 15:43:11.632+0000 [id=42]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tasks.Ant.AntInstaller
+2021-03-26 15:43:12.702+0000 [id=42]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tools.JDKInstaller
+2021-03-26 15:43:12.703+0000 [id=42]    INFO    hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt #1
+2021-03-26 15:43:12.705+0000 [id=42]    INFO    hudson.model.AsyncPeriodicWork#lambda$doRun$0: Finished Download metadata. 9,733 ms
+[root@jenkindemo ~]# docker exec 4e4d11e687c9 -it cat /var/jenkins_home/secrets/initialAdminPassword
+OCI runtime exec failed: exec failed: container_linux.go:367: starting container process caused: exec: "-it": executable file not found in $PATH: unknown
+[root@jenkindemo ~]# docker exec -it 4e4d11e687c9 cat /var/jenkins_home/secrets/initialAdminPassword
+5223275d519041358624744f4a81dc11
+[root@jenkindemo ~]# docker exec -it 4e4d11e687c9 sh
+$ git version
+git version 2.20.1
+$ cd /var/jenkins_home/workspace/jenkindemo2
+$ ls
+jenkins  pom.xml  README.md  src
+$ ls -a
+.  ..  .git  .gitattributes  .gitignore  jenkins  pom.xml  README.md  src
+$ maven -version
+sh: 5: maven: not found
+$ maven -version
+sh: 6: maven: not found
+$ maven -version
+sh: 7: maven: not found
+$ maven -version
+sh: 8: maven: not found
+$
+
+
+jenkin
+admin
+5223275d519041358624744f4a81dc11
+
+
+
+
+
+
+
+https://int0x33.medium.com/day-51-understanding-the-osi-model-f22d5f3df756  osi model read
+
+
+Github credentials
+varsha1295-jenkin
+varsha.axfone@gmail.com
+Varsha@121095
